@@ -1,95 +1,113 @@
-#include <iostream>
+﻿#include <iostream>
+#include <deque>
 
 using namespace std;
 
 class Deq {
 private:
-    int front = 0;
+    char* arr;
+    int front = -1;
     int back = 0;
     int capacity;
-    char* arr;
+    int size = 0;
 public:
-    Deq(int capacity){
+    Deq(int capacity) {
         this->capacity = capacity;
         arr = new char[capacity];
-        back = capacity-1;
     }
-    ~Deq(){
+    ~Deq() {
         delete[] arr;
     }
-    
-    bool push_back(char elem){
-        if(back==front){
-            return false;
+
+    void push_front(char elem) {
+        if (size == capacity) {
+            return;
         }
-        arr[back] = elem;
-        back--;
-        return true;
-    }
-    
-    bool push_front(char elem){
-        if(front == back){
-            return false;
-        }
+        front = (front + 1) % capacity;
         arr[front] = elem;
-        front++;
-        return true;
-    }
-    
-    char pop_back(){
-        if(back == capacity-1){
-            return 0;
+        size++;
+        if (back == 0) {
+            back = front;
         }
-        char elem = arr[back];
-        arr[back] = 0;
-        back++;
-        return elem;
     }
-    
-    char pop_front(){
-        if(front == 0){
-            return 0;
+
+    void push_back(char elem) {
+        if (size == capacity) {
+            return;
         }
-        char elem = arr[front];
-        arr[front] = 0;
-        front--;
-        return elem;
-    }
-    
-    char get_front(){
-        if(front == 0){
-            return 0;
+        back = (back - 1 + capacity) % capacity;
+        arr[back] = elem;
+        size++;
+        if (front == -1) {
+            front = back;
         }
-        return arr[front];
     }
-    
-    char get_back(){
-        if(back==0){
-            return 0;
+
+    void pop_front() {
+        if (size == 0) {
+            return;
+        }
+        front = (front - 1 + capacity) % capacity;
+        size--;
+        if (size == 0) { // Сброс
+            front = -1;
+            back = 0;
+        }
+    }
+
+    void pop_back() {
+        if (size == 0) {
+            return;
+        }
+        back = (back + 1) % capacity;
+        size--;
+        if (size == 0) {
+            front = -1;
+            back = 0;
+        }
+    }
+
+    char get_back() {
+        if (size == 0) {
+            return '=';
         }
         return arr[back];
     }
-    void print_deq(){
-        cout << "WORK!";
-        for(int i = 0; i < front; i++){
-            cout << arr[i] << " ";
+
+    char get_front() {
+        if (size == 0) {
+            return '=';
         }
-        for(int i = capacity-1; i > back; i--){
-            cout << arr[i] << " ";
+        return arr[front];
+    }
+
+    void print_deq() {
+        for (int i = 0; i < size; i++) {
+            int ind = (front - i + capacity) % capacity;
+            cout << arr[ind];
         }
         cout << "\n";
     }
-    
 };
 
 int main()
 {
-    cout << "Enter your string length\n";
-    int n; cin >> n;
-    Deq deq(n);
-    
-    for(int i = 0; i < n; i++){
-        deq.push_front(char(i));
+    for (int i = 0; i < 2; i++) {
+        cout << "\nEnter your string: ";
+        string str; cin >> str;
+        size_t n = str.size();
+        Deq deq(n);
+        for (int i = 0; i < n; i++) {
+            deq.push_back(str[i]);
+        }
+        cout << "\nYour string is: ";
+        deq.print_deq();
+        for (int i = 0; i < n / 2; i++) {
+            char elem = deq.get_back();
+            deq.pop_back();
+            deq.push_front(elem);
+        }
+        cout << "\nYour string after swapping: ";
+        deq.print_deq();
     }
-    deq.print_deq();
 }
