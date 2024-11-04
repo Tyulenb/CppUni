@@ -21,7 +21,7 @@ private:
         return getHeight(n->left) - getHeight(n->right);
     }
 
-    void fixheight(Node* n) {
+    void setHeight(Node* n) {
         n->height = max(getHeight(n->left), getHeight(n->right)) + 1;
     }
 
@@ -37,8 +37,8 @@ private:
         prev->parent = fut;
         fut->parent = tmp;
 
-        fixheight(prev);
-        fixheight(fut);
+        setHeight(prev);
+        setHeight(fut);
         return fut;
     }
 
@@ -54,8 +54,8 @@ private:
         prev->parent = fut;
         fut->parent = tmp;
 
-        fixheight(prev);
-        fixheight(fut);
+        setHeight(prev);
+        setHeight(fut);
         return fut;
     }
 
@@ -72,7 +72,7 @@ private:
     }
 
     Node* balance(Node* n) {
-        fixheight(n);
+        setHeight(n);
         if (bfactor(n) == -2) {
             if ((n->right != nullptr) && (bfactor(n->right) > 0)) {
                 n->right = rightRotate(n->right);
