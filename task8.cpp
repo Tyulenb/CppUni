@@ -3,7 +3,7 @@
 using namespace std;
 
 struct Node {
-    int data;
+    string data;
     int height;
     Node* left;
     Node* right;
@@ -90,11 +90,11 @@ private:
         }
     }
 
-    Node* insertNode(Node* root, int data) {
+    Node* insertNode(Node* root, string data) {
         if (root == nullptr) {
-            return new Node{ data, 1, nullptr, nullptr, nullptr};
+            return new Node{ data, 1, nullptr, nullptr, nullptr };
         }
-        if (data < root->data) {
+        if (data.compare(root->data) < 0) {
             root->left = insertNode(root->left, data);
             root->left->parent = root;
         }
@@ -105,31 +105,33 @@ private:
         return balance(root);
     }
 
-    Node* findNode(Node* root, int data) {
+    Node* findNode(Node* root, string data) {
         if (root == nullptr) {
             return nullptr;
         }
 
-        if (data < root->data) {
+        if (data.compare(root->data.substr(0, data.size()))<0) {
             findNode(root->left, data);
         }
-        else if (data > root->data) {
+        else if (data.compare(root->data.substr(0, data.size())) >0) {
             findNode(root->right, data);
         }
         else {
-            return root;
+            cout << root->data << "\n";
+            findNode(root->left, data);
+            findNode(root->right, data);
         }
     }
 
-    Node* removeNode(Node* root, int data) {
+    Node* removeNode(Node* root, string data) {
         if (root == nullptr) {
             return nullptr;
         }
 
-        if (data < root->data) {
+        if (data.compare(root->data) < 0) {
             root->left = removeNode(root->left, data);
         }
-        else if (data > root->data) {
+        else if (data.compare(root->data) > 0) {
             root->right = removeNode(root->right, data);
         }
         else {
@@ -166,7 +168,7 @@ private:
                 cout << "L----";
                 ind += "|   ";
             }
-            int parent = root->parent != nullptr ? root->parent->data : -1;
+            string parent = root->parent != nullptr ? root->parent->data : "root";
             cout << "(" << root->data << " parent: " << parent << ")" << "\n";
             KerPrint(root->left, ind, false);
             KerPrint(root->right, ind, true);
@@ -177,17 +179,17 @@ public:
     Tree() {
         this->tree_root = nullptr;
     }
-    void insert(int data) {
+    void insert(string data) {
         this->tree_root = insertNode(tree_root, data);
     }
     void print() {
         KerPrint(tree_root, "", false);
     }
-    void remove(int data) {
+    void remove(string data) {
         this->tree_root = removeNode(tree_root, data);
     }
 
-    Node* find(int data) {
+    Node* find(string data) {
         return findNode(tree_root, data);
     }
 
@@ -196,64 +198,52 @@ public:
 int main()
 {
     Tree tr;
-    while (true) {
-        cout << "\nEnter 1 to insert number to the tree\nEnter 2 to delete number from the tree\nEnter 3 to print tree\nEnter 4 to find number in the tree\nEnter 5 to exit\n";
+    while (false) {
+        cout << "\nEnter 1 to insert word to the dictionary\nEnter 2 to delete word from the dictionary\nEnter 3 to print tree\nEnter 4 to words by prefix\nEnter 5 to exit\n";
         int choice; cin >> choice;
-        int number;
+        string word;
         switch (choice)
         {
         case 1:
-            cout << "\nEnter a number to insert: ";
-            cin >> number;
-            tr.insert(number);
+            cout << "\nEnter a word to insert: ";
+            cin >> word;
+            tr.insert(word);
             cout << "Inserted!\n";
             break;
         case 2:
-            cout << "\nEnter a number to delete: ";
-            cin >> number;
-            if (tr.find(number)) {
-                tr.remove(number);
-                cout << "Removed!\n";
-            }
-            else {
-                cout << "There is no such number in the tree\n";
-            }
+            cout << "\nEnter a word to delete: ";
+            cin >> word;
+            tr.remove(word);
             break;
         case 3:
             tr.print();
             break;
         case 4:
-            cout << "\nEnter a number to find: ";
-            cin >> number;
-            if (tr.find(number)) {
-                cout << "The number is presented in the tree\n";
-            }
-            else {
-                cout << "There is no such number in the tree\n";
-            }
+            cout << "\nEnter a prefix to find words: ";
+            cin >> word;
+            tr.find(word); 
+            break;
         default:
             return 0;
         }
     }
-    tr.insert(1);
-    tr.insert(2);
+
+    tr.insert("apple");
+    tr.insert("apricot");
+    tr.insert("paint");
+    tr.insert("finger");
+    tr.insert("keyboard");
+    tr.insert("approach");
+    tr.insert("map");
+    tr.insert("mouse");
+    tr.insert("minecraft");
+    tr.insert("apology");
+    tr.insert("key");
     tr.print();
-    cout << "\n";
-    tr.insert(3);
-    tr.print();
-    cout << "\n";
-    tr.insert(4);
-    tr.print();
-    cout << "\n";
-    tr.insert(6);
-    tr.print();
-    cout << "\n";
-    tr.insert(5);
-    tr.print();
-    cout << "\n";
-    tr.remove(4);
-    tr.print();
-    cout << "\n";
-    cout << "4 is in the tree : " << (tr.find(4) ? "true" : "false") << "\n";
-    cout << "1 is in the tree : " << (tr.find(1) ? "true" : "false") << "\n";
+    cout << "prefix: ke\n";
+    tr.find("ke");
+    cout << "prefix: app\n";
+    tr.find("app");
+    cout << "prefix: ap\n";
+    tr.find("ap");
 }
