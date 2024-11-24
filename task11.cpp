@@ -5,6 +5,7 @@
 #include <thread>
 using namespace std;
 
+int vertexes_bfs = 0;
 void bfs(vector<vector<int>>& adj, int s) {
     queue<int> q;
     vector<bool> visited(adj.size(), false);
@@ -17,16 +18,19 @@ void bfs(vector<vector<int>>& adj, int s) {
         for (int x : adj[curr]) {
             if (!visited[x]) {
                 visited[x] = true;
+                vertexes_bfs++;
                 q.push(x);
             }
         }
     }
 }
 
+int vertexes_dfs = 0;
 void dfs(vector<vector<int>>& adj, vector<bool>& visited, int s) {
     visited[s] = true;
 
     cout << s << " ";
+    vertexes_dfs++;
 
     for (int i : adj[s]) {
         if (visited[i] == false) {
@@ -63,31 +67,32 @@ int main() {
         adj[end].push_back(start);
     }
 
-    while (true) {
-        int entryPoint;
-        cin >> entryPoint;
+    int entryPoint;
+    cin >> entryPoint;
+    cout << "BFS\nVisited vertexes: ";
+    auto st = chrono::high_resolution_clock::now();
 
-        auto st = chrono::high_resolution_clock::now();
+    bfs(adj, entryPoint);
 
-        bfs(adj, entryPoint);
+    auto en = chrono::high_resolution_clock::now();
+    chrono::duration<double> duration = en - st;
+    cout << "\nAmount of visited vertexes: " << vertexes_bfs << "\n";
+    cout << "time: " << duration.count() << "\n";
 
-        auto en = chrono::high_resolution_clock::now();
-        chrono::duration<double> duration = en - st;
-        cout << "BFS time is: " << duration.count() << "\n";
+    double time1 = duration.count();
+    this_thread::sleep_for(chrono::seconds(1));
 
-        double time1 = duration.count();
-        this_thread::sleep_for(chrono::seconds(1));
+    cout << "\nDFS\nVisited vertexes: ";
+    st = chrono::high_resolution_clock::now();
 
-        st = chrono::high_resolution_clock::now();
+    dfs(adj, visited, entryPoint);
 
-        dfs(adj, visited, entryPoint);
+    en = chrono::high_resolution_clock::now();
+    duration = en - st;
+    cout << "\nAmount of visited vertexes: " << vertexes_bfs << "\n";
+    cout << "time: " << duration.count() << "\n";
+    double time2 = duration.count();
 
-        en = chrono::high_resolution_clock::now();
-        duration = en - st;
-        cout << "DFS time is: " << duration.count() << "\n";
-        double time2 = duration.count();
-
-        cout << "BFS time to DFS = " << time1 / time2 << "\n";
-    }
+    cout << "BFS time to DFS = " << time1 / time2 << "\n";
 
 }
