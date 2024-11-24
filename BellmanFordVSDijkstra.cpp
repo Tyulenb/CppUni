@@ -71,12 +71,12 @@ int main()
         if (start == -1) {
             break;
         }
-        if (start <= 0 && start > n + 1) {
+        if (start <= 0 || start >= n + 1) {
             cout << "Value of start is incorrect.\n";
             continue;
         }
         cin >> end >> len;
-        if (end <= 0 && end > n + 1) {
+        if (start <= 0 || start >= n + 1) {
             cout << "Value of endpoint is incorrect.\n";
             continue;
         }
