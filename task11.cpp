@@ -5,7 +5,7 @@
 #include <thread>
 using namespace std;
 
-int vertexes_bfs = 0;
+int vertexes_bfs = 1;
 void bfs(vector<vector<int>>& adj, int s) {
     queue<int> q;
     vector<bool> visited(adj.size(), false);
@@ -77,6 +77,7 @@ int main() {
     auto en = chrono::high_resolution_clock::now();
     chrono::duration<double> duration = en - st;
     cout << "\nAmount of visited vertexes: " << vertexes_bfs << "\n";
+    cout << "Amount of visited edges: " << vertexes_bfs-1 << "\n";
     cout << "time: " << duration.count() << "\n";
 
     double time1 = duration.count();
@@ -89,7 +90,8 @@ int main() {
 
     en = chrono::high_resolution_clock::now();
     duration = en - st;
-    cout << "\nAmount of visited vertexes: " << vertexes_bfs << "\n";
+    cout << "\nAmount of visited vertexes: " << vertexes_dfs << "\n";
+    cout << "Amount of visited edges: " << vertexes_dfs-1 << "\n";
     cout << "time: " << duration.count() << "\n";
     double time2 = duration.count();
 
